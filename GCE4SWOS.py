@@ -1,61 +1,16 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-"""
-SWOS Career Editor
-Editor per i salvataggi di carriera (.car) di Sensible World of Soccer 96/97.
-Lavora solo sulla squadra allenata.
-
-Scheda "Club"
-  - 0xDB9A  divise (10 byte: 5 per divisa = stile, primario, secondario, pantaloncini, calzettoni)
-  - 0xD5DC  bank balance (intero a 32 bit little-endian, in sterline)
-  - 0xD880  limite trasferimenti (00 = normale, FF = illimitati)
-
-Scheda "Giocatori"  (record da 38 byte a partire da 0xDBCC)
-  +0   nazionalita' (codice 00..98, vedi NATIONS_TABLE)
-  +1   (non usato qui)
-  +2   numero di maglia
-  +3   nome (23 byte)
-  +26  ruolo (bit 7-5) + pelle/capelli (bit 4-3); i bit 2-0 non sono decifrati
-  +27  bits 7-5 = injury; bits 4-0 = discipline: 00 = clean, 01/02/03 = banned for 1/2/3
-       matches, 04 = yellow card (confirmed in the game). Other values are unknown and are
-       left untouched.
-  +28  4 byte di skill: [0|PA][VE|HE][TA|CO][SP|FI]
-       ogni skill e' un nibble: bit 2-0 = valore reale 0-7 (confermato dai dati:
-       il prezzo segue la somma dei valori reali); bit 3 = flag, preservato
-  +32  valore (prezzo), indice in una tabella da 00 a 31
-
-Rosa (usata per decidere quali giocatori mostrare)
-  0xE08C        numero di giocatori in rosa
-  0xDB60-0xDB7F lista (32 byte) degli indici dei record in rosa: i primi 11 sono i titolari,
-                i 5 successivi la panchina, poi le riserve; il resto e' 0xFF.
-  I record dei giocatori che non compaiono nella lista non fanno parte della squadra.
-
-Prima di ogni salvataggio viene creata una copia NOME.CAR.bak (solo la prima volta).
-"""
-
 import os
 import shutil
 import tkinter as tk
 import tkinter.font as tkfont
 from tkinter import filedialog, messagebox, ttk
 
-# Font dell'interfaccia: viene usato il primo monospace installato di questa lista
-# (Consolas e' sempre presente su Windows, DejaVu Sans Mono su quasi tutte le Linux).
-# Se nessuno e' disponibile si usa il font monospace di default di Tk.
 MONOSPACE_FONTS = ("Consolas", "Cascadia Mono", "DejaVu Sans Mono",
                    "Liberation Mono", "Lucida Console")
-FONT_SIZE = 10     # aumenta (11, 12...) se il testo e' ancora troppo piccolo
-SKILL_GAP = 9      # spazio (px) ai lati di ogni menu delle skill
+FONT_SIZE = 10
+SKILL_GAP = 9
 
 # ============================================================================
 # COLOR SCHEME
-# Every color of the interface is defined here: change any hex code and restart.
-# Starting values: the ones of the "clam" theme (which is only used as the drawing
-# engine for the widgets: no color is taken from it any more), except tabs and
-# buttons, which are custom. Colors of the shirts in the kit preview are NOT here:
-# they are the SWOS colors (see COLORS below).
-# Note: the Open/Save file dialogs and some message boxes are drawn by the
-# operating system on Windows and cannot be recolored.
 # ============================================================================
 
 # --- General -----------------------------------------------------------------
@@ -116,20 +71,16 @@ PREVIEW_BG = "#F4EDE8"        # background of the preview box (matches the field
 PREVIEW_BORDER = "#9893A5"    # frame of the preview box
 PREVIEW_OUTLINE = "#575279"   # thin outline of shirt, shorts and socks
 
-# ----------------------------------------------------------------------------
-# Club
-# ----------------------------------------------------------------------------
 KIT_OFFSET = 0xDB9A
-KIT_SIZE = 10          # 2 divise x 5 byte
-# Prima delle divise: nome squadra (19 byte), tattica (1 byte), divisione (1 byte)
+KIT_SIZE = 10
 TEAM_NAME_OFFSET = KIT_OFFSET - 21
 TEAM_NAME_LEN = 19
 
-BALANCE_OFFSET = 0xD5DC        # bank balance: intero a 32 bit little-endian
+BALANCE_OFFSET = 0xD5DC
 BALANCE_SIZE = 4
-BALANCE_TARGET = 100_000_000   # 100 milioni di sterline -> 00 E1 F5 05
+BALANCE_TARGET = 100_000_000
 
-TRANSFER_OFFSET = 0xD880       # 00 = limiti normali, FF = illimitati
+TRANSFER_OFFSET = 0xD880
 TRANSFER_UNLIMITED = 0xFF
 
 STYLES = {
@@ -154,31 +105,27 @@ COLORS = {
 
 KIT_FIELDS = ["Style", "Primary color", "Secondary color", "Shorts", "Socks"]
 
-# ----------------------------------------------------------------------------
-# Giocatori
-# ----------------------------------------------------------------------------
-PLAYERS_START = 0xDBCC     # inizio del record del primo giocatore
+PLAYERS_START = 0xDBCC
 PLAYER_SIZE = 38
 MAX_PLAYERS = 40
 
-NATION_OFF = 0             # offset relativi all'inizio del record
+NATION_OFF = 0
 NUMBER_OFF = 2
 NAME_OFF = 3
 NAME_FIELD_LEN = 23
 ROLE_OFF = 26
 HEALTH_OFF = 27
-SKILLS_OFF = 28            # 4 byte
+SKILLS_OFF = 28
 VALUE_OFF = 32
 
-# Rosa: il gioco stesso tiene il numero di giocatori e la lista degli indici dei record
 SQUAD_COUNT_OFFSET = 0xE08C
 SQUAD_LIST_OFFSET = 0xDB60
 SQUAD_LIST_SIZE = 32
 
-ROLE_MASK = 0xE0           # bit 7-5
-SKIN_MASK = 0x18           # bit 4-3 (i bit 2-0 sono preservati)
-HEALTH_MASK = 0xE0         # bits 7-5: injury
-DISCIPLINE_MASK = 0x1F     # bits 4-0: suspension
+ROLE_MASK = 0xE0
+SKIN_MASK = 0x18
+HEALTH_MASK = 0xE0
+DISCIPLINE_MASK = 0x1F
 DISCIPLINE = {
     0: "Clean",
     1: "1 match ban",
@@ -198,7 +145,6 @@ POSITIONS = {
     7: "A",
 }
 
-# Ordine dell'elenco giocatori (le sigle sono quelle di POSITIONS)
 ROLE_ORDER = ("G", "RB", "D", "LB", "RW", "M", "LW", "A")
 ROLE_RANK = {code: ROLE_ORDER.index(label) for code, label in POSITIONS.items()}
 
@@ -221,7 +167,6 @@ HEALTH = {
 
 SKILL_NAMES = ["PA", "VE", "HE", "TA", "CO", "SP", "FI"]
 
-# Valore (prezzo) del giocatore: il byte e' l'indice in questa tabella (00..31).
 VALUES = [
     "£25K-", "£25K", "£30K", "£40K", "£50K", "£65K", "£75K", "£85K",
     "£100K", "£110K", "£130K", "£150K", "£160K", "£180K", "£200K", "£250K",
@@ -232,7 +177,6 @@ VALUES = [
     "£15M", "£15M+",
 ]
 
-# Nazionalita': (codice, sigla SWOS, nome). Fonte: "SWOS TEAM FILE DESCRIPTION".
 NATIONS_TABLE = [
     (0x00, "ALB", "Albania"), (0x01, "AUT", "Austria"), (0x02, "BEL", "Belgium"),
     (0x03, "BUL", "Bulgaria"), (0x04, "CRO", "Croatia"), (0x05, "CYP", "Cyprus"),
@@ -322,17 +266,14 @@ def value_label(code):
 
 
 def skill_real(nibble):
-    """Valore reale della skill (0-7): i 3 bit bassi del nibble."""
     return nibble & 0x07
 
 
 def skill_flag(nibble):
-    """Bit alto del nibble (valori memorizzati 8-F)."""
     return bool(nibble & 0x08)
 
 
 def decode_skills(four):
-    """4 byte -> 7 valori (PA, VE, HE, TA, CO, SP, FI). Il primo nibble e' ignorato."""
     nibbles = []
     for b in four:
         nibbles += [b >> 4, b & 0x0F]
@@ -340,8 +281,6 @@ def decode_skills(four):
 
 
 def encode_skills(old_four, real_values):
-    """Scrive i 7 valori reali (0-7) preservando il primo nibble (sempre 0) e il
-    bit alto (flag) di ogni skill."""
     old = []
     for b in old_four:
         old += [b >> 4, b & 0x0F]
@@ -349,12 +288,7 @@ def encode_skills(old_four, real_values):
     return bytes((nibbles[i] << 4) | nibbles[i + 1] for i in range(0, 8, 2))
 
 
-# ----------------------------------------------------------------------------
-# Pannello divisa
-# ----------------------------------------------------------------------------
 class KitPanel(ttk.LabelFrame):
-    """Pannello con 5 menu a tendina e un'anteprima per una divisa."""
-
     def __init__(self, master, title):
         super().__init__(master, text=title, padding=10)
         self.style_names = [STYLES[i] for i in sorted(STYLES)]
@@ -401,13 +335,13 @@ class KitPanel(ttk.LabelFrame):
         body = (35, 15, 105, 95)
         c.create_rectangle(*body, fill=col(prim), outline=outline)
 
-        if style == 2:  # strisce verticali
+        if style == 2:
             w = (body[2] - body[0]) / 5
             for i in range(5):
                 x0 = body[0] + i * w
                 c.create_rectangle(x0, body[1], x0 + w, body[3],
                                    fill=col(prim if i % 2 == 0 else sec), outline="")
-        elif style == 3:  # strisce orizzontali
+        elif style == 3:
             h = (body[3] - body[1]) / 6
             for i in range(6):
                 y0 = body[1] + i * h
@@ -424,9 +358,6 @@ class KitPanel(ttk.LabelFrame):
         c.create_rectangle(75, 138, 95, 180, fill=col(socks), outline=outline)
 
 
-# ----------------------------------------------------------------------------
-# Applicazione
-# ----------------------------------------------------------------------------
 class SwosEditor(tk.Tk):
     def __init__(self):
         super().__init__()
@@ -439,18 +370,16 @@ class SwosEditor(tk.Tk):
 
         self.file_path = None
         self.file_data = None
-        self.players = []   # lista di (offset record, nome, numero), ordinata per ruolo
-        self._current_base = None   # giocatore attualmente selezionato
+        self.players = []
+        self._current_base = None
 
         top = ttk.Frame(self, padding=(12, 12, 12, 0))
         top.pack(fill="x")
 
-        # Riga dei bottoni centrata: il sotto-frame si dimensiona sui figli
-        # e viene centrato da pack (senza fill/expand) dentro "top".
         btn_row = ttk.Frame(top)
         btn_row.pack(anchor="center")
 
-        BTN_WIDTH = 22   # larghezza fissa in caratteri, uguale per entrambi i bottoni
+        BTN_WIDTH = 22
 
         ttk.Button(btn_row, text="Open .car file",
                    command=self.open_file, width=BTN_WIDTH).pack(side="left")
@@ -468,11 +397,8 @@ class SwosEditor(tk.Tk):
         nb.pack(fill="both", expand=True, padx=12, pady=(0, 12))
         self.notebook = nb
 
-        # Etichette delle linguette: pad con spazi ai lati per renderle tutte
-        # della stessa larghezza visiva (il font e' monospace, quindi ogni
-        # carattere ha la stessa larghezza: 9 caratteri per entrambe).
-        club_label = "  Club   "     # 9 caratteri
-        players_label = " Players "  # 9 caratteri
+        club_label = "  Club   "
+        players_label = " Players "
         self._tab_labels = (club_label, players_label)
 
         club = ttk.Frame(nb, padding=(0, 8))
@@ -483,17 +409,9 @@ class SwosEditor(tk.Tk):
         self._build_club_tab(club)
         self._build_players_tab(players_tab)
 
-        # Centra le linguette orizzontalmente. Il calcolo si basa sulla larghezza
-        # finale del notebook, quindi lo rifacciamo ad ogni <Configure> (il
-        # ridimensionamento della finestra e' disabilitato, ma l'evento serve
-        # anche per il primo layout).
         nb.bind("<Configure>", lambda e, n=nb: self._center_notebook_tabs(n))
 
-    # ------------------------------------------------------------------ stile
     def _use_theme(self):
-        """Theme 'clam' = drawing engine only (same shapes on Windows and Linux, and the
-        only one that allows custom colors). All the colors are set explicitly here and
-        in _style_tabs / _style_widgets, taking them from the COLOR SCHEME at the top."""
         style = ttk.Style(self)
         try:
             style.theme_use("clam")
@@ -501,7 +419,6 @@ class SwosEditor(tk.Tk):
             pass
         self.configure(background=APP_BG)
 
-        # defaults inherited by every widget
         style.configure(".", background=APP_BG, foreground=APP_FG, bordercolor=BORDER,
                         darkcolor=EDGE_DARK, lightcolor=EDGE_LIGHT, troughcolor=SCROLL_TROUGH,
                         selectbackground=SELECT_BG, selectforeground=SELECT_FG,
@@ -512,19 +429,15 @@ class SwosEditor(tk.Tk):
                   selectbackground=[("!focus", SELECT_BG)],
                   selectforeground=[("!focus", SELECT_FG)])
 
-        # boxes with a title ("Bank balance", "Selected player"...)
         style.configure("TLabelframe", background=APP_BG, bordercolor=BORDER,
                         lightcolor=EDGE_LIGHT, darkcolor=EDGE_DARK)
         style.configure("TLabelframe.Label", background=APP_BG, foreground=APP_FG)
 
     def _style_tabs(self):
-        """Bigger, bold tabs with clearly different colors."""
         self._tab_font = tkfont.nametofont("TkDefaultFont").copy()
         self._tab_font.configure(weight="bold")
-        # Padding orizzontale (in pixel) applicato su ciascun lato di ogni
-        # linguetta: determina quanto sono larghe. Aumenta per averle piu' larghe.
         self._tab_pad_x = 60
-        self._tab_left_margin = None   # cache per _center_notebook_tabs
+        self._tab_left_margin = None
         style = ttk.Style(self)
         style.configure("TNotebook", background=APP_BG, bordercolor=BORDER,
                         lightcolor=EDGE_LIGHT, darkcolor=EDGE_DARK, tabmargins=(0, 6, 0, 0))
@@ -539,14 +452,10 @@ class SwosEditor(tk.Tk):
                   padding=[("selected", (self._tab_pad_x, 12))])
 
     def _center_notebook_tabs(self, nb):
-        """Centra orizzontalmente le linguette del notebook calcolando il margine
-        sinistro in base alla larghezza del notebook e alla larghezza totale delle
-        linguette (testo + padding)."""
         nb.update_idletasks()
         nb_w = nb.winfo_width()
         if nb_w <= 1:
             return
-        # larghezza totale delle linguette
         total = sum(self._tab_font.measure(lbl) + 2 * self._tab_pad_x
                     for lbl in self._tab_labels)
         left = max(0, (nb_w - total) // 2)
@@ -556,15 +465,13 @@ class SwosEditor(tk.Tk):
         ttk.Style(self).configure("TNotebook", tabmargins=(left, 6, 0, 0))
 
     def _style_widgets(self):
-        """Buttons, dropdown menus, players table and scrollbar."""
         style = ttk.Style(self)
 
-        # --- buttons ---
         style.configure("TButton", font=self._tab_font, padding=(14, 6),
                         background=BUTTON_BG, foreground=BUTTON_FG,
                         bordercolor=BUTTON_BORDER, lightcolor=BUTTON_BG,
                         darkcolor=BUTTON_BG, focuscolor=BUTTON_FG)
-        style.configure("Apply.TButton", padding=(14, 0))   # as tall as the dropdown menus
+        style.configure("Apply.TButton", padding=(14, 0))
         states = [("disabled", BUTTON_DISABLED_BG), ("pressed", BUTTON_PRESS_BG),
                   ("active", BUTTON_HOVER_BG)]
         style.map("TButton",
@@ -572,7 +479,6 @@ class SwosEditor(tk.Tk):
                   foreground=[("disabled", BUTTON_DISABLED_FG)],
                   bordercolor=[("disabled", BUTTON_DISABLED_BORDER)])
 
-        # --- dropdown menus (closed field + arrow button) ---
         style.configure("TCombobox", fieldbackground=FIELD_BG, background=ARROW_BG,
                         foreground=FIELD_FG, arrowcolor=ARROW_FG, bordercolor=BORDER,
                         lightcolor=EDGE_LIGHT, darkcolor=EDGE_DARK, insertcolor=FIELD_FG)
@@ -587,13 +493,11 @@ class SwosEditor(tk.Tk):
                   darkcolor=[("focus", SELECT_BG)],
                   selectbackground=[("readonly", SELECT_BG)],
                   selectforeground=[("readonly", SELECT_FG)])
-        # the list that opens is not a ttk widget: it is colored with Tk options
         self.option_add("*TCombobox*Listbox.background", FIELD_BG)
         self.option_add("*TCombobox*Listbox.foreground", FIELD_FG)
         self.option_add("*TCombobox*Listbox.selectBackground", SELECT_BG)
         self.option_add("*TCombobox*Listbox.selectForeground", SELECT_FG)
 
-        # --- players table ---
         style.configure("Treeview", background=FIELD_BG, fieldbackground=FIELD_BG,
                         foreground=FIELD_FG, bordercolor=BORDER,
                         lightcolor=EDGE_LIGHT, darkcolor=EDGE_DARK)
@@ -604,7 +508,6 @@ class SwosEditor(tk.Tk):
                         bordercolor=BORDER, lightcolor=EDGE_LIGHT, darkcolor=EDGE_DARK)
         style.map("Treeview.Heading", background=[("active", HEADING_HOVER_BG)])
 
-        # --- scrollbar ---
         style.configure("TScrollbar", background=SCROLL_THUMB, troughcolor=SCROLL_TROUGH,
                         bordercolor=BORDER, lightcolor=EDGE_LIGHT, darkcolor=EDGE_DARK,
                         arrowcolor=SCROLL_ARROW)
@@ -612,9 +515,7 @@ class SwosEditor(tk.Tk):
                   background=[("disabled", APP_BG), ("active", SCROLL_THUMB_HOVER)],
                   arrowcolor=[("disabled", APP_FG_DISABLED)])
 
-    # ------------------------------------------------------------------ font
     def _apply_monospace_font(self):
-        """Usa il font monospace di sistema per tutta l'interfaccia."""
         available = {f.lower(): f for f in tkfont.families(self)}
         family = next((available[n.lower()] for n in MONOSPACE_FONTS if n.lower() in available),
                       tkfont.nametofont("TkFixedFont").actual("family"))
@@ -628,7 +529,6 @@ class SwosEditor(tk.Tk):
         linespace = tkfont.nametofont("TkDefaultFont").metrics("linespace")
         ttk.Style(self).configure("Treeview", rowheight=linespace + 6)
 
-    # ------------------------------------------------------------------ club
     def _build_club_tab(self, club):
         bank = ttk.LabelFrame(club, text="Bank balance", padding=10)
         bank.pack(fill="x", pady=(0, 8))
@@ -682,9 +582,7 @@ class SwosEditor(tk.Tk):
                 if isinstance(child, ttk.Combobox):
                     child.config(state=state)
 
-    # --------------------------------------------------------------- giocatori
     def _build_players_tab(self, tab):
-        # Larghezze calcolate dal font in uso: caratteri * larghezza di una cifra + margine
         cw = tkfont.nametofont("TkDefaultFont").measure("0")
         px = lambda chars: chars * cw + 16
 
@@ -756,15 +654,11 @@ class SwosEditor(tk.Tk):
 
         self.apply_btn = ttk.Button(edit, text="Apply and save", style="Apply.TButton",
                                     command=self.apply_player, state="disabled")
-        # sotto i menu delle skill, sulla stessa riga del menu Country: stesso margine
-        # verticale (pady=3) e altezza adattata al menu, cosi' bordo alto e basso coincidono
         self.apply_btn.grid(row=5, column=2, padx=(16, 0), pady=3, sticky="nsew")
         self.player_msg = ttk.Label(edit, text="")
         self.player_msg.grid(row=6, column=0, columnspan=3, sticky="w", pady=(6, 0))
 
     def _squad_indices(self, n_records):
-        """Indici dei record che fanno parte della rosa, secondo la lista del gioco.
-        Restituisce None se la lista non e' coerente (file non standard)."""
         d = self.file_data
         if SQUAD_COUNT_OFFSET >= len(d):
             return None
@@ -780,7 +674,7 @@ class SwosEditor(tk.Tk):
         self.players = []
         self._current_base = None
         data = self.file_data
-        records = []                       # (offset, nome, numero) di tutti i record validi
+        records = []
         for i in range(MAX_PLAYERS):
             base = PLAYERS_START + i * PLAYER_SIZE
             if base + PLAYER_SIZE > len(data):
@@ -792,7 +686,7 @@ class SwosEditor(tk.Tk):
             records.append((base, raw.decode("ascii"), data[base + NUMBER_OFF]))
 
         squad = self._squad_indices(len(records))
-        if squad is None:                  # lista non valida: meglio mostrare tutto
+        if squad is None:
             self.players = records
             note = "squad list not valid, showing every record"
         else:
@@ -807,7 +701,6 @@ class SwosEditor(tk.Tk):
         self.player_msg.config(text=f"{len(self.players)} players ({note}).")
 
     def _sort_players(self):
-        """Ordina per ruolo (ROLE_ORDER); a parita' di ruolo resta l'ordine del file."""
         d = self.file_data
         self.players.sort(key=lambda p: (ROLE_RANK[(d[p[0] + ROLE_OFF] & ROLE_MASK) >> 5], p[0]))
 
@@ -850,7 +743,7 @@ class SwosEditor(tk.Tk):
         for w in self.edit_widgets:
             w.config(state="readonly")
         self.apply_btn.config(state="normal")
-        if base != self._current_base:      # messaggio azzerato solo cambiando giocatore
+        if base != self._current_base:
             self.player_msg.config(text="")
         self._current_base = base
 
@@ -871,7 +764,7 @@ class SwosEditor(tk.Tk):
             if disc_text in disc_by_label:
                 disc = disc_by_label[disc_text]
             elif disc_text.endswith("(unknown)"):
-                disc = None            # code not in the table: left as it is
+                disc = None
             else:
                 raise ValueError(disc_text)
             value_text_sel = self.value_var.get()
@@ -879,7 +772,7 @@ class SwosEditor(tk.Tk):
             if value_text_sel in value_by_label:
                 value = value_by_label[value_text_sel]
             elif value_text_sel == "unknown":
-                value = self.file_data[self.players[i][0] + VALUE_OFF]   # fuori tabella: invariato
+                value = self.file_data[self.players[i][0] + VALUE_OFF]
             else:
                 raise ValueError(value_text_sel)
             nation_by_label = {nation_label(c): c for c in NATIONS}
@@ -887,7 +780,7 @@ class SwosEditor(tk.Tk):
             if nation_text in nation_by_label:
                 nation = nation_by_label[nation_text]
             elif nation_text.startswith("Unknown"):
-                nation = None          # codice non in tabella: lo lascio com'e'
+                nation = None
             else:
                 raise ValueError(nation_text)
             skills = [int(self.skill_vars[n].get()) for n in SKILL_NAMES]
@@ -920,7 +813,6 @@ class SwosEditor(tk.Tk):
         order_before = [pl[0] for pl in self.players]
         self._sort_players()
         if [pl[0] for pl in self.players] != order_before:
-            # il ruolo e' cambiato: la riga si sposta, la tabella viene ricostruita
             self._fill_table()
             new_i = next(k for k, pl in enumerate(self.players) if pl[0] == base)
             self.tree.selection_set(str(new_i))
@@ -933,7 +825,6 @@ class SwosEditor(tk.Tk):
                  f"{d[base + NATION_OFF]:02X}; bytes from 0x{first:X}: "
                  f"{snapshot.hex(' ').upper()} -> {new.hex(' ').upper()} (saved)")
 
-    # --------------------------------------------------------------- apertura
     def open_file(self):
         path = filedialog.askopenfilename(
             title="Select a .car file",
@@ -1001,10 +892,7 @@ class SwosEditor(tk.Tk):
         raw = bytes(data[TEAM_NAME_OFFSET:TEAM_NAME_OFFSET + TEAM_NAME_LEN]).split(b"\x00")[0]
         return "".join(chr(b) if 32 <= b < 127 else "?" for b in raw).strip()
 
-    # ------------------------------------------------------------ salvataggio
     def _write_file(self):
-        """Scrive file_data su disco (creando il .bak la prima volta).
-        Restituisce il percorso del backup, o None in caso di errore."""
         backup = self.file_path + ".bak"
         try:
             if not os.path.exists(backup):
@@ -1017,7 +905,6 @@ class SwosEditor(tk.Tk):
         return backup
 
     def save_file(self):
-        """Salva le divise."""
         if self.file_data is None:
             return
         try:
@@ -1073,16 +960,15 @@ class SwosEditor(tk.Tk):
 
 
 def enable_hidpi():
-    """Su Windows evita che il sistema ingrandisca (e sfochi) la finestra."""
     import sys
     if sys.platform != "win32":
         return
     import ctypes
     try:
-        ctypes.windll.shcore.SetProcessDpiAwareness(1)   # Windows 8.1 e successivi
+        ctypes.windll.shcore.SetProcessDpiAwareness(1)
     except Exception:
         try:
-            ctypes.windll.user32.SetProcessDPIAware()    # fallback per Windows piu' vecchi
+            ctypes.windll.user32.SetProcessDPIAware()
         except Exception:
             pass
 

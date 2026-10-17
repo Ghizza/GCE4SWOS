@@ -1,2 +1,2 @@
 # GCE4SWOS
-Ghizza Career Editor For Sensible World Of Soccer
+Ghizza's Career Editor For Sensible World Of Soccer

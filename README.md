@@ -23,8 +23,7 @@ I contributi per modificarla e ampliarla sono ben accetti, anzi indispensabili.
 
 # GCE4SWOS
 
-GCE4SWOS (Ghizza's Career Editor for Sensible World of Soccer) is a Python application for editing `.car` files (career save files) from Sensible World of Soccer.
-
+GCE4SWOS (Ghizza's Career Editor for Sensible World of Soccer) is a Python application for editing `.car` files (career save files) from Sensible World of Soccer.  
 It allows you to modify the following:
 
 **Managed team**
@@ -33,7 +32,7 @@ It allows you to modify the following:
 - Enable unlimited player transfers (*)
 
 **Players**
-- Change abilities (P, C, V, S, T, F, H)
+- Change skills (P, C, V, S, T, F, H)
 - Change health status (injuries)
 - Change disciplinary status (cards and suspensions)
 - Change nationality
@@ -41,8 +40,6 @@ It allows you to modify the following:
 - Change value
 - Change appearance (skin tone and hair)
 
-The app is written in vibe coding, with some manual modifications.
-
-It is not compiled yet: Python must be installed on your operating system.
-
+The app is written in vibe coding, with some manual modifications.  
+It is not compiled yet: Python must be installed on your operating system.  
 Contributions to modify and expand it are welcome—indeed, essential.

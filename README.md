@@ -47,7 +47,7 @@ Consente di intervenire sui seguenti elementi:
 **Squadra allenata**
 - Modifica delle divise (casa e trasferta)
 - Impostazione del budget a £100.000.000
-- Azzeramento del contatore di acquisti e cessioni
+- Azzeramento dei contatori di acquisti e cessioni
 
 **Giocatori**
 - Modifica delle abilità (P, C, V, S, T, F, H)

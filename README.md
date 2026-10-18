@@ -12,7 +12,7 @@ It allows you to modify the following:
 **Managed team**
 - Change kits (home and away)
 - Set the budget to £100,000,000
-- Enable unlimited player transfers (*)
+- Reset transfers counters (buys and sales)
 
 **Players**
 - Change abilities (P, C, V, S, T, F, H)
@@ -47,7 +47,7 @@ Consente di intervenire sui seguenti elementi:
 **Squadra allenata**
 - Modifica delle divise (casa e trasferta)
 - Impostazione del budget a £100.000.000
-- Abilitazione dei trasferimenti illimitati dei giocatori (*)
+- Azzeramento del contatore di acquisti e cessioni
 
 **Giocatori**
 - Modifica delle abilità (P, C, V, S, T, F, H)

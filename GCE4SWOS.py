@@ -369,7 +369,7 @@ class SwosEditor(tk.Tk):
         self._apply_monospace_font()
         self._style_tabs()
         self._style_widgets()
-        self.title("Ghizza's Career Editor For SWOS")
+        self.title("GCE4SWOS - Ghizza's Career Editor for SWOS")
         self.resizable(False, False)
 
         self.file_path = None

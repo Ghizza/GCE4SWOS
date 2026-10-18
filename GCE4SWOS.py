@@ -80,8 +80,12 @@ BALANCE_OFFSET = 0xD5DC
 BALANCE_SIZE = 4
 BALANCE_TARGET = 100_000_000
 
-TRANSFER_OFFSET = 0xD880
-TRANSFER_UNLIMITED = 0xFF
+TRANSFER_COUNTERS = (
+    (0xD876, "Season total:"),
+    (0xD878, "Backup total:"),
+    (0xD880, "Buys:"),
+    (0xD882, "Sales:"),
+)
 
 STYLES = {
     0: "Plain",
@@ -544,8 +548,8 @@ class SwosEditor(tk.Tk):
         self.transfer_label = ttk.Label(transfers, text="-")
         self.transfer_label.pack(side="left")
         self.transfer_btn = ttk.Button(
-            transfers, text="Unlimited Transfers",
-            command=self.set_unlimited_transfers, state="disabled")
+            transfers, text="Reset transfer counters",
+            command=self.reset_transfer_counters, state="disabled")
         self.transfer_btn.pack(side="right")
 
         self.kit1 = KitPanel(club, "First kit")
@@ -565,15 +569,12 @@ class SwosEditor(tk.Tk):
     def _refresh_balance(self):
         self.balance_label.config(text=f"Now: {self._fmt_money(self._read_balance())}")
 
+    def _read_counter(self, offset):
+        return int.from_bytes(self.file_data[offset:offset + 2], "little")
+
     def _refresh_transfers(self):
-        v = self.file_data[TRANSFER_OFFSET]
-        if v == TRANSFER_UNLIMITED:
-            txt = "Now: unlimited (FF)"
-        elif v == 0:
-            txt = "Now: normal limits (00)"
-        else:
-            txt = f"Now: value {v:02X}"
-        self.transfer_label.config(text=txt)
+        parts = [f"{name} {self._read_counter(o)}" for o, name in TRANSFER_COUNTERS]
+        self.transfer_label.config(text="Now: " + " | ".join(parts))
 
     def _set_kit_panels_enabled(self, enabled):
         state = "readonly" if enabled else "disabled"
@@ -943,19 +944,24 @@ class SwosEditor(tk.Tk):
             f"Copy of original: {os.path.basename(backup)}",
         )
 
-    def set_unlimited_transfers(self):
+    def reset_transfer_counters(self):
         if self.file_data is None:
             return
-        old = self.file_data[TRANSFER_OFFSET]
-        self.file_data[TRANSFER_OFFSET] = TRANSFER_UNLIMITED
+        old = {o: bytes(self.file_data[o:o + 2]) for o, _ in TRANSFER_COUNTERS}
+        for o, _ in TRANSFER_COUNTERS:
+            self.file_data[o:o + 2] = b"\x00\x00"
         backup = self._write_file()
         if backup is None:
+            for o, raw in old.items():
+                self.file_data[o:o + 2] = raw
             return
         self._refresh_transfers()
+        changes = "\n".join(
+            f"0x{o:X} ({name}): {int.from_bytes(old[o], 'little')} -> 0"
+            for o, name in TRANSFER_COUNTERS)
         messagebox.showinfo(
-            "Unlimited transfers",
-            f"Byte at 0x{TRANSFER_OFFSET:X}: {old:02X} -> {TRANSFER_UNLIMITED:02X}\n"
-            f"Copy of original: {os.path.basename(backup)}",
+            "Transfer counters reset",
+            f"{changes}\n\nCopy of original: {os.path.basename(backup)}",
         )
 
 

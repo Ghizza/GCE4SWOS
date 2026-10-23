@@ -23,6 +23,8 @@ It allows you to modify the following:
 - Change value
 - Change appearance (skin tone and hair)
 
+![Screenshot](screenshots/screenshot.png)
+
 The app is written in vibe coding, with some manual modifications.  
 It is not compiled yet: Python must be installed on your operating system.  
 Contributions to modify and expand it are welcome—indeed, essential.

@@ -10,66 +10,64 @@ FONT_SIZE = 10
 SKILL_GAP = 9
 
 # ============================================================================
-# COLOR SCHEME
+# COLOR SCHEME - Flexoki
 # ============================================================================
 
-# --- General -----------------------------------------------------------------
-APP_BG = "#CECACD"            # window, panels, boxes and the area behind the tabs
-APP_FG = "#575279"            # normal text (labels, file name, team name...)
-APP_FG_MUTED = "#797593"      # secondary text (hint line under the players table)
-APP_FG_DISABLED = "#9893A5"   # text of disabled widgets
+APP_BG = "#F2F0E5"             # base-50
+APP_FG = "#282726"             # base-900
+APP_FG_MUTED = "#6F6E69"       # base-600
+APP_FG_DISABLED = "#B7B5AC"    # base-300
 
-# --- Borders and 3D edges ----------------------------------------------------
-BORDER = "#9893A5"            # outline of boxes, menus, table, scrollbar
-EDGE_LIGHT = "#F4EDE8"        # light edge of raised parts (top/left bevel)
-EDGE_DARK = "#DFDAD9"         # dark edge of raised parts (bottom/right bevel)
+BORDER = "#DAD8CE"             # base-150
+EDGE_LIGHT = "#FFFCF0"         # paper
+EDGE_DARK = "#E6E4D9"          # base-100
 
-# --- Fields: dropdown menus, dropdown lists, table body -----------------------
-FIELD_BG = "#F4EDE8"          # background: lighter than APP_BG, so fields stand out
-FIELD_FG = "#575279"          # text
-FIELD_BG_DISABLED = "#DFDAD9" # background of menus while no player is selected
+# Input fields and player list
+FIELD_BG = "#FFFCF0"           # paper
+FIELD_FG = "#282726"            # base-900
+FIELD_BG_DISABLED = "#E6E4D9"  # base-100
 
-# --- Selection: highlighted table row AND highlighted item in the dropdown lists
-SELECT_BG = "#907AA9"
-SELECT_FG = "#F4EDE8"
+SELECT_BG = "#BC5215"           # orange-600
+SELECT_FG = "#FFFCF0"           # paper
 
-# --- Tabs (Club / Players) ---------------------------------------------------
-TAB_ACTIVE_BG = "#B4637A"     # selected tab
-TAB_ACTIVE_FG = "#F4EDE8"
-TAB_IDLE_BG = "#DFDAD9"       # not selected tab
-TAB_IDLE_FG = "#575279"
-TAB_HOVER_BG = "#9893A5"      # not selected tab under the mouse
+# Tabs
+TAB_ACTIVE_BG = "#A02F6F"       # magenta-600
+TAB_ACTIVE_FG = "#FFFCF0"       # paper
+TAB_IDLE_BG = "#E6E4D9"         # base-100
+TAB_IDLE_FG = "#575653"         # base-700
+TAB_HOVER_BG = "#CE5D97"        # magenta-400
+TAB_HOVER_FG = "#FFFCF0"        # paper
 
-# --- Buttons -----------------------------------------------------------------
-BUTTON_BG = "#286983"
-BUTTON_FG = "#F4EDE8"
-BUTTON_HOVER_BG = "#56949F"   # mouse over
-BUTTON_PRESS_BG = "#575279"   # while clicking
-BUTTON_BORDER = "#575279"
-BUTTON_DISABLED_BG = "#DFDAD9"
-BUTTON_DISABLED_FG = "#9893A5"
-BUTTON_DISABLED_BORDER = "#CECACD"
+# Buttons
+BUTTON_BG = "#205EA6"           # blue-600
+BUTTON_FG = "#FFFCF0"           # paper
+BUTTON_HOVER_BG = "#4385BE"     # blue-400
+BUTTON_PRESS_BG = "#205EA6"     # blue-600
+BUTTON_BORDER = "#205EA6"       # blue-600
+BUTTON_DISABLED_BG = "#E6E4D9"  # base-100
+BUTTON_DISABLED_FG = "#B7B5AC"  # base-300
+BUTTON_DISABLED_BORDER = "#DAD8CE" # base-150
 
-# --- Players table header (#, N., Player, Country...) -------------------------
-HEADING_BG = "#DFDAD9"
-HEADING_FG = "#575279"
-HEADING_HOVER_BG = "#CECACD"  # header under the mouse
+# Headings
+HEADING_BG = "#E6E4D9"          # base-100
+HEADING_FG = "#282726"          # base-900
+HEADING_HOVER_BG = "#DAD8CE"    # base-150
 
-# --- Dropdown menus: arrow button on the right -------------------------------
-ARROW_BG = "#DFDAD9"
-ARROW_BG_HOVER = "#CECACD"
-ARROW_FG = "#575279"          # the little triangle
+# Arrows
+ARROW_BG = "#E6E4D9"            # base-100
+ARROW_BG_HOVER = "#DAD8CE"      # base-150
+ARROW_FG = "#282726"            # base-900
 
-# --- Scrollbar of the players table ------------------------------------------
-SCROLL_TROUGH = "#DFDAD9"     # the groove
-SCROLL_THUMB = "#CECACD"      # the slider
-SCROLL_THUMB_HOVER = "#9893A5"
-SCROLL_ARROW = "#575279"      # the small arrows at the ends
+# Scrollbar
+SCROLL_TROUGH = "#F2F0E5"       # base-50
+SCROLL_THUMB = "#DAD8CE"        # base-150
+SCROLL_THUMB_HOVER = "#B7B5AC"  # base-300
+SCROLL_ARROW = "#575653"        # base-700
 
-# --- Kit preview (Club tab) --------------------------------------------------
-PREVIEW_BG = "#F4EDE8"        # background of the preview box (matches the fields)
-PREVIEW_BORDER = "#9893A5"    # frame of the preview box
-PREVIEW_OUTLINE = "#575279"   # thin outline of shirt, shorts and socks
+# Preview
+PREVIEW_BG = "#FFFCF0"          # paper
+PREVIEW_BORDER = "#DAD8CE"      # base-150
+PREVIEW_OUTLINE = "#282726"     # base-900
 
 KIT_OFFSET = 0xDB9A
 KIT_SIZE = 10
@@ -80,11 +78,11 @@ BALANCE_OFFSET = 0xD5DC
 BALANCE_SIZE = 4
 BALANCE_TARGET = 100_000_000
 
+# Ordine: Buys, Sales, Season total  (Backup total rimosso)
 TRANSFER_COUNTERS = (
-    (0xD876, "Season total:"),
-    (0xD878, "Backup total:"),
     (0xD880, "Buys:"),
     (0xD882, "Sales:"),
+    (0xD876, "Season total:"),
 )
 
 STYLES = {
@@ -139,14 +137,8 @@ DISCIPLINE = {
 }
 
 POSITIONS = {
-    0: "G",
-    1: "RB",
-    2: "LB",
-    3: "D",
-    4: "RW",
-    5: "LW",
-    6: "M",
-    7: "A",
+    0: "G", 1: "RB", 2: "LB", 3: "D",
+    4: "RW", 5: "LW", 6: "M", 7: "A",
 }
 
 ROLE_ORDER = ("G", "RB", "D", "LB", "RW", "M", "LW", "A")
@@ -294,24 +286,30 @@ def encode_skills(old_four, real_values):
 
 class KitPanel(ttk.LabelFrame):
     def __init__(self, master, title):
-        super().__init__(master, text=title, padding=10)
+        super().__init__(master, text=title, padding=14)
         self.style_names = [STYLES[i] for i in sorted(STYLES)]
         self.color_names = [COLORS[i][0] for i in sorted(COLORS)]
         self.vars = []
 
+        self.columnconfigure(0, weight=1)
+        self.columnconfigure(4, weight=1)
+        self.rowconfigure(0, weight=1)
+        self.rowconfigure(7, weight=1)
+
         for row, field in enumerate(KIT_FIELDS):
-            ttk.Label(self, text=field + ":").grid(row=row, column=0, sticky="w", pady=3)
+            ttk.Label(self, text=field + ":").grid(
+                row=row + 1, column=1, sticky="w", pady=3)
             var = tk.StringVar()
             values = self.style_names if row == 0 else self.color_names
             cb = ttk.Combobox(self, textvariable=var, values=values,
                               state="readonly", width=20)
-            cb.grid(row=row, column=1, sticky="w", padx=(8, 0), pady=3)
+            cb.grid(row=row + 1, column=2, sticky="w", padx=(8, 0), pady=3)
             cb.bind("<<ComboboxSelected>>", lambda e: self.redraw())
             self.vars.append(var)
 
         self.canvas = tk.Canvas(self, width=140, height=190, bg=PREVIEW_BG,
                                 highlightthickness=1, highlightbackground=PREVIEW_BORDER)
-        self.canvas.grid(row=0, column=2, rowspan=6, padx=(18, 0))
+        self.canvas.grid(row=1, column=3, rowspan=6, padx=(20, 0))
 
     def set_values(self, five_bytes):
         for i, b in enumerate(five_bytes):
@@ -365,8 +363,8 @@ class KitPanel(ttk.LabelFrame):
 class SwosEditor(tk.Tk):
     def __init__(self):
         super().__init__()
-        self._use_theme()
         self._apply_monospace_font()
+        self._use_theme()
         self._style_tabs()
         self._style_widgets()
         self.title("GCE4SWOS - Ghizza's Career Editor for SWOS")
@@ -377,44 +375,10 @@ class SwosEditor(tk.Tk):
         self.players = []
         self._current_base = None
 
-        top = ttk.Frame(self, padding=(12, 12, 12, 0))
-        top.pack(fill="x")
+        self._build_header()
+        self._build_notebook()
 
-        btn_row = ttk.Frame(top)
-        btn_row.pack(anchor="center")
-
-        BTN_WIDTH = 22
-
-        ttk.Button(btn_row, text="Open .car file",
-                   command=self.open_file, width=BTN_WIDTH).pack(side="left")
-
-        self.save_btn = ttk.Button(btn_row, text="Save kit changes",
-                                   command=self.save_file, state="disabled",
-                                   width=BTN_WIDTH)
-        self.save_btn.pack(side="left", padx=(10, 0))
-
-        self.status = ttk.Label(self, text="No file loaded", anchor="w",
-                                justify="left", padding=(12, 8))
-        self.status.pack(fill="x")
-
-        nb = ttk.Notebook(self)
-        nb.pack(fill="both", expand=True, padx=12, pady=(0, 12))
-        self.notebook = nb
-
-        club_label = "  Club   "
-        players_label = " Players "
-        self._tab_labels = (club_label, players_label)
-
-        club = ttk.Frame(nb, padding=(0, 8))
-        nb.add(club, text=club_label)
-        players_tab = ttk.Frame(nb, padding=8)
-        nb.add(players_tab, text=players_label)
-
-        self._build_club_tab(club)
-        self._build_players_tab(players_tab)
-
-        nb.bind("<Configure>", lambda e, n=nb: self._center_notebook_tabs(n))
-
+    # ---------------------------------------------------------------- theming
     def _use_theme(self):
         style = ttk.Style(self)
         try:
@@ -434,13 +398,14 @@ class SwosEditor(tk.Tk):
                   selectforeground=[("!focus", SELECT_FG)])
 
         style.configure("TLabelframe", background=APP_BG, bordercolor=BORDER,
-                        lightcolor=EDGE_LIGHT, darkcolor=EDGE_DARK)
-        style.configure("TLabelframe.Label", background=APP_BG, foreground=APP_FG)
+                        lightcolor=BORDER, darkcolor=BORDER, borderwidth=1)
+        style.configure("TLabelframe.Label", background=APP_BG, foreground=APP_FG,
+                        font=self._heading_font)
 
     def _style_tabs(self):
         self._tab_font = tkfont.nametofont("TkDefaultFont").copy()
         self._tab_font.configure(weight="bold")
-        self._tab_pad_x = 60
+        self._tab_pad_x = 55
         self._tab_left_margin = None
         style = ttk.Style(self)
         style.configure("TNotebook", background=APP_BG, bordercolor=BORDER,
@@ -451,9 +416,9 @@ class SwosEditor(tk.Tk):
                         bordercolor=BORDER, lightcolor=EDGE_DARK, darkcolor=EDGE_DARK)
         style.map("TNotebook.Tab",
                   background=[("selected", TAB_ACTIVE_BG), ("active", TAB_HOVER_BG)],
-                  foreground=[("selected", TAB_ACTIVE_FG), ("active", TAB_IDLE_FG)],
+                  foreground=[("selected", TAB_ACTIVE_FG), ("active", TAB_HOVER_FG)],
                   lightcolor=[("selected", EDGE_LIGHT)],
-                  padding=[("selected", (self._tab_pad_x, 12))])
+                  padding=[("selected", (self._tab_pad_x, 11))])
 
     def _center_notebook_tabs(self, nb):
         nb.update_idletasks()
@@ -471,11 +436,11 @@ class SwosEditor(tk.Tk):
     def _style_widgets(self):
         style = ttk.Style(self)
 
-        style.configure("TButton", font=self._tab_font, padding=(14, 6),
+        style.configure("TButton", font=self._tab_font, padding=(16, 7),
                         background=BUTTON_BG, foreground=BUTTON_FG,
                         bordercolor=BUTTON_BORDER, lightcolor=BUTTON_BG,
                         darkcolor=BUTTON_BG, focuscolor=BUTTON_FG)
-        style.configure("Apply.TButton", padding=(14, 0))
+        style.configure("Apply.TButton", padding=(20, 2))
         states = [("disabled", BUTTON_DISABLED_BG), ("pressed", BUTTON_PRESS_BG),
                   ("active", BUTTON_HOVER_BG)]
         style.map("TButton",
@@ -519,6 +484,23 @@ class SwosEditor(tk.Tk):
                   background=[("disabled", APP_BG), ("active", SCROLL_THUMB_HOVER)],
                   arrowcolor=[("disabled", APP_FG_DISABLED)])
 
+        linespace = tkfont.nametofont("TkDefaultFont").metrics("linespace")
+        style.configure("Treeview", rowheight=linespace + 8)
+
+        style.configure("TSeparator", background=BORDER)
+
+        style.configure("Title.TLabel", font=self._title_font,
+                        background=APP_BG, foreground=APP_FG)
+        style.configure("Subtitle.TLabel", font=self._subtitle_font,
+                        background=APP_BG, foreground=APP_FG_MUTED)
+        style.configure("Status.TLabel", font=self._status_font,
+                        background=APP_BG, foreground=APP_FG_MUTED)
+        style.configure("Hint.TLabel", font=self._subtitle_font,
+                        background=APP_BG, foreground=APP_FG_MUTED)
+        # stesso font dei bottoni (TButton usa self._tab_font)
+        style.configure("Value.TLabel", font=self._tab_font,
+                        background=APP_BG, foreground=APP_FG)
+
     def _apply_monospace_font(self):
         available = {f.lower(): f for f in tkfont.families(self)}
         family = next((available[n.lower()] for n in MONOSPACE_FONTS if n.lower() in available),
@@ -530,32 +512,87 @@ class SwosEditor(tk.Tk):
                 tkfont.nametofont(name).configure(family=family, size=FONT_SIZE)
             except tk.TclError:
                 pass
-        linespace = tkfont.nametofont("TkDefaultFont").metrics("linespace")
-        ttk.Style(self).configure("Treeview", rowheight=linespace + 6)
 
+        self._title_font = tkfont.nametofont("TkDefaultFont").copy()
+        self._title_font.configure(size=FONT_SIZE + 6, weight="bold")
+        self._subtitle_font = tkfont.nametofont("TkDefaultFont").copy()
+        self._status_font = tkfont.nametofont("TkDefaultFont").copy()
+        self._status_font.configure(size=FONT_SIZE - 1)
+        self._heading_font = tkfont.nametofont("TkDefaultFont").copy()
+        self._heading_font.configure(weight="bold")
+
+    # ---------------------------------------------------------------- layout
+    def _build_header(self):
+        header = ttk.Frame(self, padding=(22, 18, 22, 4))
+        header.pack(fill="x")
+
+        title_box = ttk.Frame(header)
+        title_box.pack(side="left", anchor="w")
+        self.title_label = ttk.Label(title_box, text="GCE4SWOS", style="Title.TLabel")
+        self.title_label.pack(anchor="w")
+        ttk.Label(title_box, text="Career Editor for SWOS", style="Subtitle.TLabel").pack(anchor="w")
+
+        btn_row = ttk.Frame(header)
+        btn_row.pack(side="right", anchor="e", pady=(8, 0))
+
+        ttk.Button(btn_row, text="Open .car file",
+                   command=self.open_file).pack(side="left")
+        self.save_btn = ttk.Button(btn_row, text="Save kit changes",
+                                   command=self.save_file, state="disabled")
+        self.save_btn.pack(side="left", padx=(8, 0))
+
+        self.status = ttk.Label(self, text="No file loaded", anchor="w",
+                                justify="left", padding=(22, 6, 22, 12),
+                                style="Status.TLabel")
+        self.status.pack(fill="x")
+
+        ttk.Separator(self, orient="horizontal").pack(fill="x", padx=22, pady=(0, 8))
+
+    def _build_notebook(self):
+        nb = ttk.Notebook(self)
+        nb.pack(fill="both", expand=True, padx=22, pady=(0, 20))
+        self.notebook = nb
+
+        club_label = "  Club   "
+        players_label = " Players "
+        self._tab_labels = (club_label, players_label)
+
+        club = ttk.Frame(nb, padding=(10, 10))
+        nb.add(club, text=club_label)
+        players_tab = ttk.Frame(nb, padding=8)
+        nb.add(players_tab, text=players_label)
+
+        self._build_club_tab(club)
+        self._build_players_tab(players_tab)
+
+        nb.bind("<Configure>", lambda e, n=nb: self._center_notebook_tabs(n))
+
+    # ---------------------------------------------------------------- club tab
     def _build_club_tab(self, club):
-        bank = ttk.LabelFrame(club, text="Bank balance", padding=10)
-        bank.pack(fill="x", pady=(0, 8))
-        self.balance_label = ttk.Label(bank, text="-")
+        bank = ttk.LabelFrame(club, text="Bank balance", padding=14)
+        bank.pack(fill="x", pady=(0, 10))
+        self.balance_label = ttk.Label(bank, text="-", style="Value.TLabel")
         self.balance_label.pack(side="left")
         self.balance_btn = ttk.Button(
             bank, text=f"Set to {self._fmt_money(BALANCE_TARGET)}",
             command=self.set_balance, state="disabled")
         self.balance_btn.pack(side="right")
 
-        transfers = ttk.LabelFrame(club, text="Transfers", padding=10)
-        transfers.pack(fill="x", pady=(0, 8))
-        self.transfer_label = ttk.Label(transfers, text="-")
+        transfers = ttk.LabelFrame(club, text="Transfers", padding=14)
+        transfers.pack(fill="x", pady=(0, 10))
+        self.transfer_label = ttk.Label(transfers, text="-", style="Value.TLabel")
         self.transfer_label.pack(side="left")
         self.transfer_btn = ttk.Button(
             transfers, text="Reset transfer counters",
             command=self.reset_transfer_counters, state="disabled")
         self.transfer_btn.pack(side="right")
 
-        self.kit1 = KitPanel(club, "First kit")
-        self.kit1.pack(fill="x", pady=(0, 8))
-        self.kit2 = KitPanel(club, "Second kit")
-        self.kit2.pack(fill="x")
+        kit_row = ttk.Frame(club)
+        kit_row.pack(fill="both", expand=True)
+        self.kit1 = KitPanel(kit_row, "First kit")
+        self.kit1.pack(side="left", fill="both", expand=True, padx=(0, 5))
+        self.kit2 = KitPanel(kit_row, "Second kit")
+        self.kit2.pack(side="left", fill="both", expand=True, padx=(5, 0))
         self._set_kit_panels_enabled(False)
 
     @staticmethod
@@ -567,14 +604,14 @@ class SwosEditor(tk.Tk):
         return int.from_bytes(raw, "little")
 
     def _refresh_balance(self):
-        self.balance_label.config(text=f"Now: {self._fmt_money(self._read_balance())}")
+        self.balance_label.config(text=f"{self._fmt_money(self._read_balance())}")
 
     def _read_counter(self, offset):
         return int.from_bytes(self.file_data[offset:offset + 2], "little")
 
     def _refresh_transfers(self):
         parts = [f"{name} {self._read_counter(o)}" for o, name in TRANSFER_COUNTERS]
-        self.transfer_label.config(text="Now: " + " | ".join(parts))
+        self.transfer_label.config(text=" • ".join(parts))
 
     def _set_kit_panels_enabled(self, enabled):
         state = "readonly" if enabled else "disabled"
@@ -583,6 +620,7 @@ class SwosEditor(tk.Tk):
                 if isinstance(child, ttk.Combobox):
                     child.config(state=state)
 
+    # ---------------------------------------------------------------- players tab
     def _build_players_tab(self, tab):
         cw = tkfont.nametofont("TkDefaultFont").measure("0")
         px = lambda chars: chars * cw + 16
@@ -614,10 +652,10 @@ class SwosEditor(tk.Tk):
         self.tree.bind("<<TreeviewSelect>>", self._on_player_select)
         ttk.Label(tab, text="Skill: real value 0-7. * = high bit set "
                             "(stored value 8-F), preserved.",
-                  foreground=APP_FG_MUTED).pack(anchor="w", pady=(4, 0))
+                  style="Hint.TLabel").pack(anchor="w", pady=(6, 0))
 
-        edit = ttk.LabelFrame(tab, text="Selected player", padding=10)
-        edit.pack(fill="x", pady=(8, 0))
+        edit = ttk.LabelFrame(tab, text="Selected player", padding=14)
+        edit.pack(fill="x", pady=(10, 0))
         self.edit_frame = edit
 
         self.role_var = tk.StringVar()
@@ -630,11 +668,12 @@ class SwosEditor(tk.Tk):
         self.edit_widgets = []
 
         def combo(row, label, var, values, width):
-            ttk.Label(edit, text=label).grid(row=row, column=0, sticky="w", pady=3)
+            ttk.Label(edit, text=label).grid(row=row, column=0, sticky="e", pady=4)
             cb = ttk.Combobox(edit, textvariable=var, values=values,
                               state="disabled", width=width)
-            cb.grid(row=row, column=1, sticky="w", padx=8, pady=3)
+            cb.grid(row=row, column=1, sticky="sew", padx=10, pady=4)
             self.edit_widgets.append(cb)
+            return cb
 
         combo(0, "Role:", self.role_var, [POSITIONS[i] for i in sorted(POSITIONS)], 30)
         combo(1, "Skin & hair:", self.skin_var, [SKINS[k] for k in sorted(SKINS)], 30)
@@ -642,23 +681,25 @@ class SwosEditor(tk.Tk):
         combo(3, "Discipline:", self.disc_var, [DISCIPLINE[k] for k in sorted(DISCIPLINE)], 30)
         combo(4, "Value:", self.value_var, [value_label(c) for c in range(len(VALUES))], 30)
         nation_values = [nation_label(c) for c in sorted(NATIONS, key=lambda c: NATIONS[c][1])]
-        combo(5, "Country:", self.nation_var, nation_values, 30)
+        cb_country = combo(5, "Country:", self.nation_var, nation_values, 30)
+        cb_country.grid_configure(pady=(4, 0))
 
-        skills = ttk.LabelFrame(edit, text="Skill (0-7)", padding=6)
-        skills.grid(row=0, column=2, rowspan=5, padx=(16, 0), sticky="n")
+        skills = ttk.LabelFrame(edit, text="Skill (0-7)", padding=8)
+        skills.grid(row=0, column=2, rowspan=5, padx=(20, 0), sticky="n")
         for i, n in enumerate(SKILL_NAMES):
             ttk.Label(skills, text=n).grid(row=0, column=i, padx=SKILL_GAP)
             cb = ttk.Combobox(skills, textvariable=self.skill_vars[n], state="disabled",
                               values=[str(v) for v in range(8)], width=3)
-            cb.grid(row=1, column=i, padx=SKILL_GAP, pady=2)
+            cb.grid(row=1, column=i, padx=SKILL_GAP, pady=3)
             self.edit_widgets.append(cb)
 
         self.apply_btn = ttk.Button(edit, text="Apply and save", style="Apply.TButton",
                                     command=self.apply_player, state="disabled")
-        self.apply_btn.grid(row=5, column=2, padx=(16, 0), pady=3, sticky="nsew")
-        self.player_msg = ttk.Label(edit, text="")
-        self.player_msg.grid(row=6, column=0, columnspan=3, sticky="w", pady=(6, 0))
+        self.apply_btn.grid(row=5, column=2, padx=(20, 0), pady=(4, 0), sticky="sew")
+        self.player_msg = ttk.Label(edit, text="", style="Hint.TLabel")
+        self.player_msg.grid(row=6, column=0, columnspan=3, sticky="w", pady=(8, 0))
 
+    # ---------------------------------------------------------------- players logic
     def _squad_indices(self, n_records):
         d = self.file_data
         if SQUAD_COUNT_OFFSET >= len(d):
@@ -826,6 +867,7 @@ class SwosEditor(tk.Tk):
                  f"{d[base + NATION_OFF]:02X}; bytes from 0x{first:X}: "
                  f"{snapshot.hex(' ').upper()} -> {new.hex(' ').upper()} (saved)")
 
+    # ---------------------------------------------------------------- file I/O
     def open_file(self):
         path = filedialog.askopenfilename(
             title="Select a .car file",
@@ -883,8 +925,10 @@ class SwosEditor(tk.Tk):
         self._load_players()
 
         team = self._read_team_name(data)
+        self.title_label.config(
+            text=f"GCE4SWOS • {team}" if team else "GCE4SWOS")
         self.status.config(
-            text=f"File: {os.path.basename(path)}  ({len(data)} bytes)\n"
+            text=f"File: {os.path.basename(path)}  ({len(data)} bytes)   ·   "
                  f"Team: {team or '(unreadable name)'}"
         )
 

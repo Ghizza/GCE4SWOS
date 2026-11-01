@@ -1,8 +1,8 @@
 # GCE4SWOS
 
-****🇬🇧 [English](#english)** | 🇮🇹 [Italiano](#italiano)**
+****🇬🇧 [English](#overview)** | 🇮🇹 [Italiano](#panoramica)**
 
-### English
+### Overview
 
 GCE4SWOS (Ghizza's Career Editor for Sensible World of Soccer) is a Python application for editing `.car` files (career save files) from Sensible World of Soccer.  
 It allows you to modify the following:
@@ -39,7 +39,7 @@ After installation, verify by opening a terminal or command prompt and running `
 
 ---
 
-### Italiano
+### Panoramica
 
 GCE4SWOS (Ghizza's Career Editor for Sensible World of Soccer) è un'applicazione Python per modificare i file `.car` (i salvataggi delle carriere) di Sensible World of Soccer.  
 Consente di intervenire sui seguenti elementi:

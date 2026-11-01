@@ -1,6 +1,6 @@
 # GCE4SWOS
 
-[🇬🇧 English](#english) | [🇮🇹 Italiano](#italiano)
+****🇬🇧 [English](#english)** | 🇮🇹 [Italiano](#italiano)**
 
 ### English
 
